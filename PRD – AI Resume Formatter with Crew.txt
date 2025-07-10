@@ -1,0 +1,75 @@
+PRD – AI Resume Formatter with CrewAI + RAG + Streamlit
+📌 Project Name:
+SmartResume.AI — Intelligent Resume Formatting Assistant
+
+📋 Overview
+SmartResume.AI is an AI-powered application that takes a resume in PDF format, extracts the content via OCR, intelligently formats and enhances the content using AI agents powered by CrewAI and RAG (Retrieval-Augmented Generation), and then exports a polished, ATS-friendly, and beautifully styled PDF resume. The UI is built with Streamlit for smooth interaction, and OpenRouter is used to call various LLM backends.
+
+🎯 Goals
+Convert unstructured or poorly formatted resumes into professionally enhanced resumes
+
+Use multi-agent AI architecture for role-specific enhancements
+
+Support job-targeted customization (e.g., resume for Data Analyst vs. Product Manager)
+
+Export the final output as a ready-to-download PDF
+
+🧑‍💻 Target Users
+Students or freshers looking for polished resumes
+
+Job switchers or professionals who want role-specific enhancements
+
+HR, career counselors, and placement cells
+
+Resume-building SaaS tools (possible B2B integrations)
+
+⚙️ Features
+Feature	Description
+📥 PDF Upload	Upload scanned or digital resume PDF
+🔍 OCR + Parsing	Detects text from PDF (even scanned ones) using Tesseract
+🧠 CrewAI Agents	Multi-role agents handle parsing, enhancement, and formatting
+📚 RAG Agent	Retrieves better bullet points, phrasings, and industry examples
+✨ Formatting Agent	Rewrites content in a clean structure with tone control
+🎨 Role Customization	User selects target job role, formatting adapts accordingly
+📄 PDF Export	New resume is generated using HTML-to-PDF conversion
+🌐 Streamlit UI	Clean frontend for uploads, preview, and download
+🔑 OpenRouter API	LLM calls for enhancement, using OpenRouter for flexibility (Mistral, GPT-4, Claude etc.)
+
+🤖 AI Architecture
+Agent	Role	Tools
+OCRAgent	Extract raw resume text	pytesseract, pdf2image
+ParserAgent	Structure into fields like name, skills, jobs	LangChain
+RAGAgent	Fetches resume writing examples	LangChain Retriever, ChromaDB
+FormatterAgent	Rewrites and formats clean resume	OpenRouter LLM
+PDFExporterAgent	Converts final output to polished PDF	WeasyPrint
+
+🖼️ UI Flow (Streamlit)
+Upload Resume
+
+Choose Job Role / Style
+
+Click Format
+
+Preview Final Resume
+
+Download PDF
+
+🧰 Tech Stack
+Layer	Tools
+🧠 AI Models	OpenRouter (GPT-4, Claude, Mistral), LLM via LangChain
+🕹️ Agents	CrewAI
+🔎 OCR	pytesseract, pdf2image
+🗂 Retrieval	ChromaDB, LangChain, SentenceTransformers
+🖼 UI	Streamlit
+🖨 PDF	WeasyPrint, pdfkit
+📄 Parsing	PyMuPDF, pdfplumber
+
+📈 Success Metrics
+Metric	Goal
+Time to enhance resume	< 10 seconds
+OCR accuracy	90%+ on clean scans
+Resume format rating	4.5+/5 (user feedback)
+Download conversions	75%+ of users download PDF
+Model cost	<$0.005 per resume (OpenRouter budget control)
+
+
