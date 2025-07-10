@@ -1,12 +1,11 @@
 streamlit
-crewai
 langchain
-pytesseract
+langchain-openai
+python-dotenv
 pdf2image
+pytesseract
+Pillow
 chromadb
 sentence-transformers
 weasyprint
-pdfkit
-pymupdf
-pdfplumber
-openai
+langchain-huggingface
