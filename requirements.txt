@@ -1,0 +1,12 @@
+streamlit
+crewai
+langchain
+pytesseract
+pdf2image
+chromadb
+sentence-transformers
+weasyprint
+pdfkit
+pymupdf
+pdfplumber
+openai
