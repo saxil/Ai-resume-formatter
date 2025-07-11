@@ -46,6 +46,9 @@ if st.button("✨ Format Resume"):
             extracted_text = ocr_agent.extract_text_from_pdf(pdf_bytes)
 
             # 2. Parser Agent: Structure into fields
+            if not openai_api_key.startswith('sk-'):
+                st.error("Please enter a valid OpenAI API key.")
+                st.stop()
             parser_agent = ParserAgent(openai_api_key=openai_api_key)
             parsed_data = parser_agent.parse_resume(extracted_text)
 

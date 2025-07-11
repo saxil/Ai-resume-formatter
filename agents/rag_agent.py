@@ -4,7 +4,10 @@ from langchain.docstore.document import Document
 
 class RAGAgent:
     def __init__(self):
-        self.embedding_function = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        self.embedding_function = HuggingFaceEmbeddings(
+            model_name="all-MiniLM-L6-v2",
+            model_kwargs={'device': 'cpu'}
+        )
         self.vectordb = Chroma(embedding_function=self.embedding_function)
 
     def add_examples(self, examples: list[str]):
