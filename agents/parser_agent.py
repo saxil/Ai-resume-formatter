@@ -12,9 +12,11 @@ class Resume(BaseModel):
     education: list[dict] = Field(description="List of educational qualifications, each with degree, institution, and years")
     skills: list[str] = Field(description="List of skills")
 
+import logging
+
 class ParserAgent:
-    def __init__(self, openai_api_key: str):
-        self.llm = ChatOpenAI(model="gpt-4o", temperature=0, openai_api_key=openai_api_key)
+    def __init__(self, openai_api_key: str, base_url: str):
+        self.llm = ChatOpenAI(model="gpt-4o", temperature=0, openai_api_key=openai_api_key, base_url=base_url, max_tokens=2000)
         self.parser = JsonOutputParser(pydantic_object=Resume)
         self.prompt = PromptTemplate(
             template="""Extract the following information from the resume text provided:
@@ -27,4 +29,10 @@ class ParserAgent:
         self.chain = self.prompt | self.llm | self.parser
 
     def parse_resume(self, resume_text: str) -> Resume:
-        return self.chain.invoke({"resume_text": resume_text})
+        try:
+            # Truncate resume_text to avoid exceeding token limits
+            truncated_resume_text = resume_text[:7000]  # Limit to 7000 characters
+            return self.chain.invoke({"resume_text": truncated_resume_text})
+        except Exception as e:
+            logging.error(f"Error in ParserAgent: {e}", exc_info=True)
+            raise

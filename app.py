@@ -1,11 +1,15 @@
 import streamlit as st
 import os
+import logging
 from agents.ocr_agent import OCRAgent
 from agents.parser_agent import ParserAgent
 from pydantic import BaseModel
 from agents.rag_agent import RAGAgent
 from agents.formatter_agent import FormatterAgent
 from agents.pdf_exporter_agent import PDFExporterAgent
+
+# Configure logging
+logging.basicConfig(filename='debug.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 st.set_page_config(page_title="SmartResume.AI", page_icon="🤖")
 
@@ -40,55 +44,45 @@ job_role = st.text_input("🎯 Target Job Role (e.g., Data Analyst, Product Mana
 if st.button("✨ Format Resume"):
     if uploaded_file is not None and job_role and openai_api_key:
         with st.spinner("Processing... Our AI agents are at work! 🧠"):
-            # 1. OCR Agent: Extract raw text
-            ocr_agent = OCRAgent()
-            pdf_bytes = uploaded_file.read()
-            extracted_text = ocr_agent.extract_text_from_pdf(pdf_bytes)
+            try:
+                # 1. OCR Agent: Extract raw text
+                ocr_agent = OCRAgent()
+                pdf_bytes = uploaded_file.read()
+                extracted_text = ocr_agent.extract_text_from_pdf(pdf_bytes)
+                logging.info("OCR successful.")
 
-            # 2. Parser Agent: Structure into fields
-            if not openai_api_key.startswith('sk-'):
-                st.error("Please enter a valid OpenAI API key.")
+                # 2. Parser Agent: Structure into fields
+                if not (openai_api_key.startswith('sk-') or openai_api_key.startswith('sk-or-')):
+                    st.error("Please enter a valid OpenAI or OpenRouter API key.")
+                    st.stop()
+                parser_agent = ParserAgent(openai_api_key=openai_api_key, base_url=openrouter_api_base)
+                parsed_data = parser_agent.parse_resume(extracted_text)
+                logging.info("Parsing successful.")
+
+                # 3. RAG Agent: Retrieve relevant examples
+                retrieved_examples = rag_agent.retrieve_examples(job_role)
+                logging.info("RAG retrieval successful.")
+
+                # 4. Formatter Agent: Rewrite and format
+                formatter_agent = FormatterAgent(openai_api_key=openai_api_key, model_name=model_name, openrouter_api_base=openrouter_api_base)
+                formatted_resume_content = formatter_agent.format_resume(
+                    parsed_data.dict(), job_role + "\n\nRelevant Examples: " + "\n".join(retrieved_examples)
+                )
+                logging.info("Formatting successful.")
+
+                # 5. PDF Exporter Agent: Convert to PDF
+                pdf_exporter_agent = PDFExporterAgent()
+                output_pdf_path = "formatted_resume.pdf"
+                pdf_exporter_agent.export_to_pdf(formatted_resume_content, output_pdf_path)
+                logging.info("PDF export successful.")
+
+                st.success("Resume formatted successfully!")
+
+            except Exception as e:
+                logging.error(f"An error occurred: {e}", exc_info=True)
+                st.error(f"An unexpected error occurred. Please check the debug.log file for more details.")
                 st.stop()
-            parser_agent = ParserAgent(openai_api_key=openai_api_key)
-            parsed_data = parser_agent.parse_resume(extracted_text)
 
-            # 3. RAG Agent: Retrieve relevant examples
-            retrieved_examples = rag_agent.retrieve_examples(job_role)
-
-            # 4. Formatter Agent: Rewrite and format
-            formatter_agent = FormatterAgent(openai_api_key=openai_api_key, model_name=model_name, openrouter_api_base=openrouter_api_base)
-            formatted_resume_content = formatter_agent.format_resume(
-                parsed_data.dict(), job_role + "\n\nRelevant Examples: " + "\n".join(retrieved_examples)
-            )
-
-            # 5. PDF Exporter Agent: Convert to PDF
-            pdf_exporter_agent = PDFExporterAgent()
-            output_pdf_path = "formatted_resume.pdf"
-            # For simplicity, let's assume the formatter agent returns HTML content
-            # In a real app, you'd convert the formatted text to HTML first
-            html_content = f"""<!DOCTYPE html>
-<html>
-<head>
-<title>Formatted Resume</title>
-<style>
-    body {{ font-family: Arial, sans-serif; margin: 20px; }}
-    h1 {{ color: #333; }}
-    h2 {{ color: #555; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 20px; }}
-    p {{ line-height: 1.6; }}
-    ul {{ list-style-type: none; padding: 0; }}
-    li {{ margin-bottom: 5px; }}
-</style>
-</head>
-<body>
-<h1>Formatted Resume</h1>
-<pre>{formatted_resume_content}</pre>
-</body>
-</html>"""
-
-            pdf_exporter_agent.export_to_pdf(html_content, output_pdf_path)
-
-            st.success("Resume formatted successfully!")
-            
         st.subheader("📄 Extracted Text (for debugging)")
         st.text_area("Extracted Text", extracted_text, height=300)
 

@@ -5,10 +5,9 @@ from langchain.docstore.document import Document
 class RAGAgent:
     def __init__(self):
         self.embedding_function = HuggingFaceEmbeddings(
-            model_name="all-MiniLM-L6-v2",
-            model_kwargs={'device': 'cpu'}
+            model_name="all-MiniLM-L6-v2", model_kwargs={}
         )
-        self.vectordb = Chroma(embedding_function=self.embedding_function)
+        self.vectordb = Chroma(embedding_function=self.embedding_function, persist_directory="./chroma_db")
 
     def add_examples(self, examples: list[str]):
         docs = [Document(page_content=example) for example in examples]
