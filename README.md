@@ -1,4 +1,4 @@
-# 📄 AI Resume Formatter
+# 📄 ResumeGenius AI
 
 > An **AI-powered resume formatting tool** that extracts, cleans, and reformats resumes into professional, recruiter-ready templates using **OCR, NLP, and Large Language Models**.
 
@@ -6,7 +6,7 @@
 
 ## 🚀 Overview
 
-**AI Resume Formatter** is designed to simplify and modernize the way resumes are handled. Instead of spending hours aligning text and tweaking templates, this tool uses **OCR, LangChain-based agents, and Retrieval-Augmented Generation (RAG)** to:
+**ResumeGenius AI** is designed to simplify and modernize the way resumes are handled. Instead of spending hours aligning text and tweaking templates, this tool uses **OCR, LangChain-based agents, and Retrieval-Augmented Generation (RAG)** to:
 
 - Parse and extract text from resumes (PDF/DOCX)  
 - Reformat content into **clean, professional templates**  
@@ -44,7 +44,7 @@ Whether you're a student, job seeker, or recruiter, this tool automates the most
 ## 📂 Repository Structure
 
 ```
-Ai-resume-formatter/
+ResumeGenius-AI/
 ├── app.py                      # Main entry point
 ├── requirements.txt             # Dependencies
 ├── agents/                      # Modular AI agents
@@ -56,7 +56,7 @@ Ai-resume-formatter/
 ├── chroma_db/                   # Vector DB for embeddings
 ├── .github/workflows/           # CI/CD pipelines
 │   └── python-app.yml
-├── PRD – AI Resume Formatter.txt # Product requirement doc
+├── PRD – ResumeGenius-AI.txt # Product requirement doc
 └── README.md
 ```
 
@@ -71,8 +71,8 @@ Ai-resume-formatter/
 
 ### 📥 Clone the Repository
 ```bash
-git clone https://github.com/saxil/Ai-resume-formatter.git
-cd Ai-resume-formatter
+git clone https://github.com/saxil/ResumeGenius-AI.git
+cd ResumeGenius-AI
 ```
 
 ### 📦 Install Dependencies
